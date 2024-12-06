@@ -140,7 +140,7 @@ Review.init(
     {
         sequelize,
         modelName: 'Review',
-        tableName: 'review',
+        tableName: 'reviews',
         timestamps: false,
         paranoid: true,
     }
