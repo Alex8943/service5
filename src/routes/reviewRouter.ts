@@ -2,11 +2,12 @@ import express from "express";
 import { Review as Reviews } from "../other_services/model/seqModel";
 import logger from "../other_services/winstonLogger";
 import { fetchDataFromQueue } from "../other_services/rabbitMQ";
+import verifyUser from "./authenticateUser";
 
 const router = express.Router();
 
 // Get one review by ID
-router.get("/review/:id", async (req, res) => {
+router.get("/review/:id", verifyUser, async (req, res) => {
     try {
         const reviewId = parseInt(req.params.id, 10);
         console.log(`Fetching review with ID: ${reviewId}`);
