@@ -30,7 +30,7 @@ export async function getOneReview(id: number) {
     try {
         // Fetch the review from the database
         const review = await Reviews.findOne({
-            where: {id: id}, // Fetch only active reviews
+            where: { id: id }, // Fetch only active reviews
         });
 
         if (!review) {
@@ -40,11 +40,12 @@ export async function getOneReview(id: number) {
 
         console.log("Fetched review from database:", review);
 
-        // Enrich the review with user, media, and genre data from RabbitMQ
-        const [user, media, genres] = await Promise.all([
+        // Enrich the review with user, media, genre, and platform data from RabbitMQ
+        const [user, media, genres, platform] = await Promise.all([
             fetchDataFromQueue("user-service", { userId: review.user_fk }),
             fetchDataFromQueue("media-service", { mediaId: review.media_fk }),
             fetchDataFromQueue("genre-service", { reviewId: review.id }),
+            fetchDataFromQueue("platform-service", { platformId: review.platform_fk }), // Fetch platform details
         ]);
 
         const enrichedReview = {
@@ -56,6 +57,7 @@ export async function getOneReview(id: number) {
             user: user || { error: "User not found" },
             media: media || { error: "Media not found" },
             genres: genres || [],
+            platform: platform || { error: "Platform not found" }, // Add platform details
         };
 
         console.log("Enriched review:", enrichedReview);
