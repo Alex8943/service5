@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const RABBITMQ_URL = process.env.RABBITMQ_URL || "amqp://localhost";
+const RABBITMQ_URL = process.env.rabbitmq_url || "amqp://localhost";
 if (!RABBITMQ_URL) {
     throw new Error("RabbitMQ URL is not provided");
 }
